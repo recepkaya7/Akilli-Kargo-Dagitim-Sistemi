@@ -1,0 +1,1305 @@
+ARAYÜZ KODLARI
+
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!--<meta http-equiv="refresh" content="1; URL=http://127.0.0.1:5500/UserInterface2_deneme.html">-->
+    <title>UI4</title>
+
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+      crossorigin="anonymous"
+    />
+
+    <style>
+      .table {
+        background-color: burlywood;
+      }
+      #hide-markers,
+      #show-markers,
+      #delete-markers,
+      #kargoKonumLabel,
+      #musteriAdi {
+        background-color: coral;
+      }
+      .btnnE,
+      .btnnS {
+        background-color: crimson;
+      }
+      .mapD {
+        margin-left: 0%;
+        height: 300px;
+        width: 100%;
+      }
+
+      .burak {
+        margin-top: 50px;
+      }
+
+      .kargoI {
+        margin-top: 8px;
+      }
+
+      .btnnE {
+        margin-top: 15px;
+      }
+
+      .btnnS {
+        margin-top: 15px;
+        margin-right: 10px;
+      }
+      .col-md-3 {
+        margin-top: 0%;
+      }
+    </style>
+
+    <style>
+      #map {
+        height: 100%;
+      }
+      .bu {
+        margin-bottom: 1%;
+      }
+
+      /* Optional: Makes the sample page fill the window. */
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        background-color: chocolate;
+      }
+
+      #description {
+        font-family: Roboto;
+        font-size: 15px;
+        font-weight: 300;
+      }
+
+      #infowindow-content .title {
+        font-weight: bold;
+      }
+
+      #infowindow-content {
+        display: none;
+      }
+
+      #map #infowindow-content {
+        display: inline;
+      }
+
+      .pac-card {
+        background-color: #fff;
+        border: 0;
+        border-radius: 2px;
+        box-shadow: 0 1px 4px -1px rgba(0, 0, 0, 0.3);
+        margin: 10px;
+        padding: 0 0.5em;
+        font: 400 18px Roboto, Arial, sans-serif;
+        overflow: hidden;
+        font-family: Roboto;
+        padding: 0;
+      }
+
+      #pac-container {
+        padding-bottom: 12px;
+        margin-right: 12px;
+      }
+
+      .pac-controls {
+        display: inline-block;
+        padding: 5px 11px;
+      }
+
+      .pac-controls label {
+        font-family: Roboto;
+        font-size: 13px;
+        font-weight: 300;
+      }
+
+      #pac-input {
+        background-color: #fff;
+        font-family: Roboto;
+        font-size: 15px;
+        font-weight: 300;
+        margin-left: 12px;
+        padding: 0 11px 0 13px;
+        text-overflow: ellipsis;
+        width: 400px;
+      }
+
+      #pac-input:focus {
+        border-color: #4d90fe;
+      }
+
+      #title {
+        color: #fff;
+        background-color: #4d90fe;
+        font-size: 25px;
+        font-weight: 500;
+        padding: 6px 12px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="pac-card" id="pac-card">
+        <div>
+          <div id="title">Autocomplete search</div>
+          <div id="type-selector" class="pac-controls">
+            <input
+              type="radio"
+              name="type"
+              id="changetype-all"
+              checked="checked"
+            />
+            <label for="changetype-all">All</label>
+
+            <input type="radio" name="type" id="changetype-establishment" />
+            <label for="changetype-establishment">establishment</label>
+
+            <input type="radio" name="type" id="changetype-address" />
+            <label for="changetype-address">address</label>
+
+            <input type="radio" name="type" id="changetype-geocode" />
+            <label for="changetype-geocode">geocode</label>
+
+            <input type="radio" name="type" id="changetype-cities" />
+            <label for="changetype-cities">(cities)</label>
+
+            <input type="radio" name="type" id="changetype-regions" />
+            <label for="changetype-regions">(regions)</label>
+          </div>
+          <br />
+          <div id="strict-bounds-selector" class="pac-controls">
+            <input type="checkbox" id="use-location-bias" value="" checked />
+            <label for="use-location-bias">Bias to map viewport</label>
+
+            <input type="checkbox" id="use-strict-bounds" value="" />
+            <label for="use-strict-bounds">Strict bounds</label>
+          </div>
+        </div>
+        <div id="pac-container">
+          <input id="pac-input" type="text" placeholder="Enter a location" />
+        </div>
+      </div>
+
+      <div id="hepsi" class="container-fluid">
+        <div class="row bu">
+          <div id="map" class="mapD" style="width: 99%; height: 450px"></div>
+        </div>
+        <div id="infowindow-content">
+          <span id="place-name" class="title"></span><br />
+          <span id="place-address"></span>
+        </div>
+
+        <div id="floating-panel">
+          <input id="hide-markers" type="button" value="Hide Markers" />
+          <input id="show-markers" type="button" value="Show Markers" />
+          <input id="delete-markers" type="button" value="Delete Markers" />
+        </div>
+
+        <div class="row burak">
+          <div class="col-lg-6 col-md-3">
+            <input
+              class="kargoI"
+              id="kargoKonumLabel"
+              type="text"
+              placeholder="kargo konumu"
+            />
+            <br /><br />
+            <input id="musteriAdi" type="text" placeholder="musteri adi" />
+            <br />
+            <button class="btnnS" id="kargoSilBtn">Kargo Sil</button>
+            <button class="btnnE" id="kargoEkleBtn">Kargo Ekle</button>
+          </div>
+          <div class="col-lg-6 col-md-4">
+            <table class="table table-responsive">
+              <thead>
+                <tr>
+                  <th>id</th>
+                  <th>konum</th>
+                  <th>musteri</th>
+                  <th>durum</th>
+                </tr>
+              </thead>
+              <tbody id="tbodyy"></tbody>
+            </table>
+          </div>
+          <div class="col-sm-4 col-md-4"></div>
+        </div>
+      </div>
+    </div>
+    <script type="module">
+      var stdNo = 0;
+      var tbody = document.getElementById("tbodyy");
+
+      // Import the functions you need from the SDKs you need
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.3/firebase-app.js";
+      import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.1.3/firebase-analytics.js";
+      // TODO: Add SDKs for Firebase products that you want to use
+      // https://firebase.google.com/docs/web/setup#available-libraries
+
+      // Your web app's Firebase configuration
+      // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+      const firebaseConfig = {
+        apiKey: "AIzaSyBSLmukA81vudpPWDGglzsHEvZsWU7wlRc",
+        authDomain: "karr-35c12.firebaseapp.com",
+        databaseURL:
+          "https://karr-35c12-default-rtdb.europe-west1.firebasedatabase.app",
+        projectId: "karr-35c12",
+        storageBucket: "karr-35c12.appspot.com",
+        messagingSenderId: "76996189222",
+        appId: "1:76996189222:web:e25b900b6d2ef13d149ae7",
+        measurementId: "G-CT2N2WTPQ3",
+      };
+
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const analytics = getAnalytics(app);
+
+      import {
+        getFirestore,
+        doc,
+        getDoc,
+        setDoc,
+        collection,
+        addDoc,
+        updateDoc,
+        deleteDoc,
+        deleteField,
+        getDocs,
+      } from "https://www.gstatic.com/firebasejs/9.1.3/firebase-firestore.js";
+      const db = getFirestore();
+
+      let databaseN = "kargolar";
+      let kargoKonumlar = [];
+      let kargoTeslim = "false";
+
+      let kargo_box = document.getElementById("kargoKonumLabel");
+      let eklebutton = document.getElementById("kargoEkleBtn");
+      let musteri_box = document.getElementById("musteriAdi");
+      let silbutton = document.getElementById("kargoSilBtn");
+
+      async function AddADocument() {
+        kargo_box.value = kargo_box.value.replace("(", "");
+        kargo_box.value = kargo_box.value.slice(0, -1);
+        kargoKonumlar = kargo_box.value.split(",");
+        if (kargoKonumlar.length == 1) {
+          var ref = doc(db, databaseN, kargo_box.value);
+          const docRef = await setDoc(ref, {
+            //kargoLat: kargoKonumlar[0],
+            //kargoLng: kargoKonumlar[1]
+            kargoAdres: kargo_box.value,
+            musteriAdi: musteri_box.value,
+            kargoTeslim: kargoTeslim,
+          })
+            .then(() => {
+              //alert("Kargo eklendi");
+              setTimeout(getAll, 500);
+              //getAll();
+              window.onload = getAll;
+            })
+            .catch((error) => {
+              alert("Error : " + error);
+            });
+        } else {
+          var ref = doc(db, databaseN, kargo_box.value);
+          const docRef = await setDoc(ref, {
+            kargoLat: kargoKonumlar[0],
+            kargoLng: kargoKonumlar[1],
+            kargoAdres: kargo_box.value,
+            musteriAdi: musteri_box.value,
+            kargoTeslim: kargoTeslim,
+          })
+            .then(() => {
+              //alert("Kargo eklendi");
+              setTimeout(getAll, 500);
+              //getAll();
+              window.onload = getAll;
+            })
+            .catch((error) => {
+              alert("Error : " + error);
+            });
+        }
+      }
+
+      async function DeleteDocument() {
+        var ref = doc(db, databaseN, kargo_box.value);
+
+        const docSnap = await getDoc(ref);
+
+        if (!docSnap.exists()) {
+          alert("xxx");
+          return;
+        }
+        await deleteDoc(ref)
+          .then(() => {
+            //alert("a");
+            setTimeout(getAll, 500);
+            //getAll();
+            window.onload = getAll;
+          })
+          .catch((error) => {
+            alert("b" + error);
+          });
+      }
+
+      eklebutton.addEventListener("click", AddADocument);
+      silbutton.addEventListener("click", DeleteDocument);
+
+      function addItemTable(place, name, durum) {
+        let trow = document.createElement("tr");
+        let td1 = document.createElement("td");
+        let td2 = document.createElement("td");
+        let td3 = document.createElement("td");
+        let td4 = document.createElement("td");
+
+        td1.innerHTML = ++stdNo;
+        td2.innerHTML = place;
+        td3.innerHTML = name;
+        td4.innerHTML = durum;
+
+        trow.appendChild(td1);
+        trow.appendChild(td2);
+        trow.appendChild(td3);
+        trow.appendChild(td4);
+        tbody.appendChild(trow);
+      }
+
+      function addAll(list) {
+        stdNo = 0;
+        tbody.innerHTML = "";
+        list.forEach((element) => {
+          addItemTable(
+            element.kargoAdres,
+            element.musteriAdi,
+            element.kargoTeslim
+          );
+        });
+      }
+
+      async function getAll() {
+        const querySnapshot = await getDocs(collection(db, databaseN));
+        var list2 = [];
+
+        querySnapshot.forEach((doc) => {
+          list2.push(doc.data());
+        });
+        addAll(list2);
+        //console.log(list2);
+      }
+
+      window.onload = getAll;
+    </script>
+
+    <script>
+      let markers = [];
+      let map;
+      let xler = [];
+      let yler = [];
+      // This example requires the Places library. Include the libraries=places
+      // parameter when you first load the API. For example:
+      // <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
+      function initMap() {
+        map = new google.maps.Map(document.getElementById("map"), {
+          center: { lat: 40.76470130056639, lng: 29.942591951422113 },
+          zoom: 13,
+          mapTypeControl: false,
+        });
+        const card = document.getElementById("pac-card");
+        const input = document.getElementById("pac-input");
+        const biasInputElement = document.getElementById("use-location-bias");
+        const strictBoundsInputElement =
+          document.getElementById("use-strict-bounds");
+        const options = {
+          fields: ["formatted_address", "geometry", "name"],
+          strictBounds: false,
+          types: ["establishment"],
+        };
+
+        map.controls[google.maps.ControlPosition.TOP_LEFT].push(card);
+
+        const autocomplete = new google.maps.places.Autocomplete(
+          input,
+          options
+        );
+
+        // Bind the map's bounds (viewport) property to the autocomplete object,
+        // so that the autocomplete requests use the current map bounds for the
+        // bounds option in the request.
+        autocomplete.bindTo("bounds", map);
+
+        const infowindow = new google.maps.InfoWindow();
+        const infowindowContent = document.getElementById("infowindow-content");
+
+        infowindow.setContent(infowindowContent);
+
+        const marker = new google.maps.Marker({
+          map,
+          anchorPoint: new google.maps.Point(0, -5),
+        });
+
+        autocomplete.addListener("place_changed", () => {
+          infowindow.close();
+          marker.setVisible(false);
+
+          const place = autocomplete.getPlace();
+
+          if (!place.geometry || !place.geometry.location) {
+            // User entered the name of a Place that was not suggested and
+            // pressed the Enter key, or the Place Details request failed.
+            window.alert(
+              "No details available for input: '" + place.name + "'"
+            );
+            return;
+          }
+
+          // If the place has a geometry, then present it on a map.
+          if (place.geometry.viewport) {
+            map.fitBounds(place.geometry.viewport);
+          } else {
+            map.setCenter(place.geometry.location);
+            map.setZoom(17);
+          }
+
+          marker.setPosition(place.geometry.location);
+          addMarker(place.geometry.location);
+          document.getElementById("kargoKonumLabel").value =
+            place.geometry.location.toJSON().lat +
+            "," +
+            place.geometry.location.toJSON().lng;
+          console.log(place.geometry.location.toJSON().lat);
+          // marker.setVisible(true);
+          infowindowContent.children["place-name"].textContent = place.name;
+          infowindowContent.children["place-address"].textContent =
+            place.formatted_address;
+          infowindow.open(map, marker);
+        });
+
+        // Sets a listener on a radio button to change the filter type on Places
+        // Autocomplete.
+        function setupClickListener(id, types) {
+          const radioButton = document.getElementById(id);
+
+          radioButton.addEventListener("click", () => {
+            autocomplete.setTypes(types);
+            input.value = "";
+          });
+        }
+
+        setupClickListener("changetype-all", []);
+        setupClickListener("changetype-address", ["address"]);
+        setupClickListener("changetype-establishment", ["establishment"]);
+        setupClickListener("changetype-geocode", ["geocode"]);
+        setupClickListener("changetype-cities", ["(cities)"]);
+        setupClickListener("changetype-regions", ["(regions)"]);
+        biasInputElement.addEventListener("change", () => {
+          if (biasInputElement.checked) {
+            autocomplete.bindTo("bounds", map);
+          } else {
+            // User wants to turn off location bias, so three things need to happen:
+            // 1. Unbind from map
+            // 2. Reset the bounds to whole world
+            // 3. Uncheck the strict bounds checkbox UI (which also disables strict bounds)
+            autocomplete.unbind("bounds");
+            autocomplete.setBounds({
+              east: 180,
+              west: -180,
+              north: 90,
+              south: -90,
+            });
+            strictBoundsInputElement.checked = biasInputElement.checked;
+          }
+
+          input.value = "";
+        });
+        strictBoundsInputElement.addEventListener("change", () => {
+          autocomplete.setOptions({
+            strictBounds: strictBoundsInputElement.checked,
+          });
+          if (strictBoundsInputElement.checked) {
+            biasInputElement.checked = strictBoundsInputElement.checked;
+            autocomplete.bindTo("bounds", map);
+          }
+
+          input.value = "";
+        });
+
+        // This event listener will call addMarker() when the map is clicked.
+        map.addListener("click", (event) => {
+          addMarker(event.latLng);
+
+          document.getElementById("kargoKonumLabel").value = event.latLng;
+        });
+        // add event listeners for the buttons
+        document
+          .getElementById("show-markers")
+          .addEventListener("click", showMarkers);
+        document
+          .getElementById("hide-markers")
+          .addEventListener("click", hideMarkers);
+        document
+          .getElementById("delete-markers")
+          .addEventListener("click", deleteMarkers);
+      }
+
+      // Adds a marker to the map and push to the array.
+      function addMarker(position) {
+        const marker = new google.maps.Marker({
+          position,
+          map,
+        });
+
+        markers.push(marker);
+      }
+
+      // Sets the map on all markers in the array.
+      function setMapOnAll(map) {
+        for (let i = 0; i < markers.length; i++) {
+          markers[i].setMap(map);
+        }
+      }
+
+      // Removes the markers from the map, but keeps them in the array.
+      function hideMarkers() {
+        setMapOnAll(null);
+      }
+
+      // Shows any markers currently in the array.
+      function showMarkers() {
+        setMapOnAll(map);
+      }
+
+      // Deletes all markers in the array by removing references to them.
+      function deleteMarkers() {
+        hideMarkers();
+        markers = [];
+      }
+    </script>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"
+      integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"
+      integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDbgGEM1EiBauwAyLcUujb6hxSIKxT21MA&callback=initMap&libraries=places&v=weekly"
+      async
+    ></script>
+  </body>
+</html>
+
+
+LOGİN EKRANI
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Document</title>
+    <style>
+      html,
+      body {
+        background-color: aqua;
+      }
+      label {
+        background-color: blanchedalmond;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div>
+      <label>Kullanici adi</label> <input id="kullaniciBox" type="text" />
+      <br /><br />
+      <label> Sifre</label> <input id="sifreBox" type="password" /><br /><br />
+      <button id="giris">Giris</button><br />
+      <hr />
+
+      <label>Kullanici_adi2</label>
+      <input id="kullaniciKayitBox" type="text" /><br /><br />
+      <label>Sifre2</label>
+      <input id="sifreKayitBox" type="password" /><br /><br />
+      <button id="kayitOl">Kayıt Ol</button><br />
+      <hr />
+
+      <label>Kullanici_adi3</label>
+      <input id="kullaniciDegisBox" type="text" /><br /><br />
+
+      <label>Eski sifre</label>
+      <input id="sifreDegis_2Box" type="password" /><br /><br />
+      <label>Yeni sifre</label>
+      <input id="sifreDegisBox" type="password" /><br /><br />
+      <button id="degisbox">Sifreni degistir</button>
+    </div>
+
+    <script type="module">
+      // Import the functions you need from the SDKs you need
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.3/firebase-app.js";
+      import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.1.3/firebase-analytics.js";
+      // TODO: Add SDKs for Firebase products that you want to use
+      // https://firebase.google.com/docs/web/setup#available-libraries
+
+      // Your web app's Firebase configuration
+      // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+      const firebaseConfig = {
+        apiKey: "AIzaSyBSLmukA81vudpPWDGglzsHEvZsWU7wlRc",
+        authDomain: "karr-35c12.firebaseapp.com",
+        databaseURL:
+          "https://karr-35c12-default-rtdb.europe-west1.firebasedatabase.app",
+        projectId: "karr-35c12",
+        storageBucket: "karr-35c12.appspot.com",
+        messagingSenderId: "76996189222",
+        appId: "1:76996189222:web:e25b900b6d2ef13d149ae7",
+        measurementId: "G-CT2N2WTPQ3",
+      };
+
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const analytics = getAnalytics(app);
+
+      import {
+        getFirestore,
+        doc,
+        getDoc,
+        setDoc,
+        collection,
+        addDoc,
+        updateDoc,
+        deleteDoc,
+        deleteField,
+      } from "https://www.gstatic.com/firebasejs/9.1.3/firebase-firestore.js";
+      const db = getFirestore();
+
+      let ad2;
+      let sifre2;
+
+      let databaseName = "kullanicilar";
+
+      let kullanici_box = document.getElementById("kullaniciBox");
+      let sifre_box = document.getElementById("sifreBox");
+      let girisBtn = document.getElementById("giris");
+
+      let kullaniciKayit_box = document.getElementById("kullaniciKayitBox");
+      let sifreKayit_box = document.getElementById("sifreKayitBox");
+      let kayitBtn = document.getElementById("kayitOl");
+
+      let kullanicidegis_box = document.getElementById("kullaniciDegisBox");
+      let sifredegis_box = document.getElementById("sifreDegisBox");
+      let sifredegis_2 = document.getElementById("sifreDegis_2Box");
+      let degisbtn = document.getElementById("degisbox");
+
+      async function AddDocument_Auto_ID() {
+        var ref = doc(db, databaseName, kullaniciKayit_box.value);
+        const docRef = await setDoc(ref, {
+          userName: kullaniciKayit_box.value,
+          sifre: sifreKayit_box.value,
+        })
+          .then(() => {
+            alert("Kayit Basarili");
+          })
+          .catch((error) => {
+            alert("Kayit Olunamadi" + error);
+          });
+      }
+
+      async function GetADocument() {
+        var ref = doc(db, databaseName, kullanici_box.value);
+
+        const docSnap = await getDoc(ref);
+
+        if (docSnap.exists()) {
+          ad2 = docSnap.data().userName;
+          sifre2 = docSnap.data().sifre;
+
+          if (kullanici_box.value == ad2 && sifre2 == sifre_box.value) {
+            alert("giris basarili");
+            go();
+          } else {
+            alert("hatali giris");
+          }
+        } else {
+          alert("hata");
+        }
+      }
+
+      async function updateFieldsInADocument() {
+        var ref = doc(db, databaseName, kullanicidegis_box.value);
+
+        const docSnap = await getDoc(ref);
+        if (docSnap.exists()) {
+          console.log("a");
+          sifre2 = docSnap.data().sifre;
+          ad2 = docSnap.data().userName;
+          if (kullanicidegis_box.value == ad2 && sifre2 == sifredegis_2.value) {
+            console.log("a2");
+            await updateDoc(ref, {
+              sifre: sifredegis_box.value,
+            })
+              .then(() => {
+                alert("sifre degisti");
+              })
+              .catch((error) => {
+                alert("error :" + error);
+              });
+          }
+        }
+      }
+
+      girisBtn.addEventListener("click", GetADocument);
+      kayitBtn.addEventListener("click", AddDocument_Auto_ID);
+      degisbtn.addEventListener("click", updateFieldsInADocument);
+
+      function go() {
+        document.location.href = "asil_arayuz.html";
+      }
+    </script>
+  </body>
+</html>
+
+
+HARİTA EKRANI
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Waypoints in Directions</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+    <!--<link rel="stylesheet" type="text/css" href="./style.css" />-->
+    <!--<script src="./index.js"></script>-->
+    <style>
+      /* Optional: Makes the sample page fill the window. */
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+
+      #container {
+        height: 100%;
+        display: flex;
+      }
+      #AlinanKonumlar {
+        display: none;
+      }
+
+      #sidebar {
+        flex-basis: 15rem;
+        flex-grow: 1;
+
+        padding: 1rem;
+        max-width: 30rem;
+        height: 100%;
+        box-sizing: border-box;
+        overflow: auto;
+      }
+
+      #map {
+        flex-basis: 0;
+        flex-grow: 4;
+        height: 100%;
+      }
+
+      #directions-panel {
+        margin-top: 10px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="container">
+      <div id="map"></div>
+      <div id="sidebar">
+        <div>
+          <label id="AlinanKonumlar">a</label>
+          <label id="al_rota"></label>
+          <b>Start:</b>
+          <select id="start">
+            <option value=">Manisa,Turkey">Manisa,Turkey</option>
+            <option value="Boston, MA">Boston, MA</option>
+            <option value="New York, NY">New York, NY</option>
+            <option value="Miami, FL">Miami, FL</option>
+          </select>
+          <br />
+          <b>Waypoints:</b> <br />
+          <i>(Ctrl+Click or Cmd+Click for multiple selection)</i> <br />
+          <select multiple id="waypoints">
+            <option value="Ankara,Turkey">Ankara,Turkey</option>
+            <option value="Balıkesir,Turkey">Balıkesir,Turkey</option>
+            <option value="chicago, il">Chicago</option>
+            <option value="winnipeg, mb">Winnipeg</option>
+            <option value="fargo, nd">Fargo</option>
+            <option value="calgary, ab">Calgary</option>
+            <option value="spokane, wa">Spokane</option>
+          </select>
+          <br />
+          <b>End:</b>
+          <select id="end">
+            <option value="İstanbul,Turkey">İstanbul,Turkey</option>
+            <option value="Seattle, WA">Seattle, WA</option>
+            <option value="San Francisco, CA">San Francisco, CA</option>
+            <option value="Los Angeles, CA">Los Angeles, CA</option>
+          </select>
+          <br />
+          <input type="submit" id="submit" />
+        </div>
+        <div id="directions-panel"></div>
+        <button id="kargocu">Dağıtıma başla</button>
+      </div>
+    </div>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.3/firebase-app.js";
+      import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.1.3/firebase-analytics.js";
+      // TODO: Add SDKs for Firebase products that you want to use
+      // https://firebase.google.com/docs/web/setup#available-libraries
+
+      // Your web app's Firebase configuration
+      // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+      const firebaseConfig = {
+        apiKey: "AIzaSyBSLmukA81vudpPWDGglzsHEvZsWU7wlRc",
+        authDomain: "karr-35c12.firebaseapp.com",
+        databaseURL:
+          "https://karr-35c12-default-rtdb.europe-west1.firebasedatabase.app",
+        projectId: "karr-35c12",
+        storageBucket: "karr-35c12.appspot.com",
+        messagingSenderId: "76996189222",
+        appId: "1:76996189222:web:e25b900b6d2ef13d149ae7",
+        measurementId: "G-CT2N2WTPQ3",
+      };
+
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const analytics = getAnalytics(app);
+
+      import {
+        getFirestore,
+        doc,
+        getDoc,
+        setDoc,
+        collection,
+        addDoc,
+        updateDoc,
+        deleteDoc,
+        deleteField,
+        getDocs,
+      } from "https://www.gstatic.com/firebasejs/9.1.3/firebase-firestore.js";
+      const db = getFirestore();
+
+      let databaseN = "kargolar";
+      let kargoKonumlar = [];
+
+      function addAll(list) {
+        kargoKonumlar = [];
+
+        list.forEach((element) => {
+          kargoKonumlar.push(element.kargoLat + "," + element.kargoLng + "|");
+        });
+        //console.log(kargoKonumlar);
+
+        document.getElementById("AlinanKonumlar").innerHTML = kargoKonumlar;
+        //console.log(document.getElementById("AlinanKonumlar").innerHTML);
+      }
+
+      setTimeout(function () {
+        // noktaSil(list[i_kontrol]);
+        alert(document.getElementById("al_rota").innerHTML);
+      }, 15000);
+
+      async function getAll() {
+        const querySnapshot = await getDocs(collection(db, databaseN));
+        var list2 = [];
+
+        querySnapshot.forEach((doc) => {
+          list2.push(doc.data());
+        });
+        addAll(list2);
+        //console.log(list2);
+      }
+      window.onload = getAll;
+      setInterval(getAll, 1000);
+      let kargoButton = document.getElementById("kargocu");
+      kargoButton.addEventListener("click", (e) => {
+        //alert(liste_sil.length + " leng");
+        for (let i = 0; i < liste_sil.length; i++) {
+          setTimeout(function () {
+            DeleteDocument(liste_sil[i]);
+          }, (i + 1) * 10000);
+        }
+      });
+      async function DeleteDocument(value) {
+        // alert("document");
+        var ref = doc(db, "kargolar", value);
+        // alert("delete");
+        const docSnap = await getDoc(ref);
+
+        if (!docSnap.exists()) {
+          //alert("xxx");
+          return;
+        }
+        await deleteDoc(ref)
+          .then(() => {
+            // alert("a");
+            //getAll();
+          })
+          .catch((error) => {
+            //alert("b" + error);
+          });
+      }
+      //setInterval(function(){ calculateAndDisplayRoute(directionsService,directionsRenderer,konumlar)},25000);
+    </script>
+
+    <script>
+      let konumlarH = [];
+      setInterval(atamak, 2000);
+      function atamak() {
+        konumlarH = document
+          .getElementById("AlinanKonumlar")
+          .innerHTML.split("|,");
+        konumlarH[konumlarH.length - 1] = konumlarH[konumlarH.length - 1].slice(
+          0,
+          -1
+        );
+      }
+      let liste_sil = [];
+      let global_res;
+      function initMap() {
+        var directionsService = new google.maps.DirectionsService();
+        var directionsRenderer = new google.maps.DirectionsRenderer();
+        var map = new google.maps.Map(document.getElementById("map"), {
+          zoom: 6,
+          center: { lat: 41.85, lng: 29 },
+        });
+        // HEAP BASŞLANGIÇ
+
+        var swap = function (array, pos1, pos2) {
+          var temp = array[pos1];
+          array[pos1] = array[pos2];
+          array[pos2] = temp;
+        };
+
+        var heapsPermute = function (array, n, results = []) {
+          n = n || array.length;
+          if (n === 1) {
+            results.push(array.slice());
+          } else {
+            for (var i = 1; i <= n; i += 1) {
+              heapsPermute(array, n - 1, results);
+              if (n % 2) {
+                var j = 1;
+              } else {
+                var j = i;
+              }
+              swap(array, j - 1, n - 1);
+            }
+          }
+          return results;
+        };
+        var listem = [];
+
+        var listee = [];
+
+        setInterval(yaz, 3000);
+
+        function yaz() {
+          listee = konumlarH;
+          //console.log(listee);
+        }
+        setInterval(function () {
+          baslangic = listee[0];
+        }, 4000);
+        //baslangic = "40.763791865912644, 29.95279340788193";
+        //baslangic = "manisa";
+        // var copy = {};
+        //.map((a) => a.join(" "))
+        setInterval(function () {
+          listem = heapsPermute(listee);
+          //console.log(listem);
+          listee = [];
+          console.log("GO");
+        }, 5000);
+        var konumlar = [];
+
+        /* setInterval(function () {
+          for (var i = 0; i < listem.length; i++) {
+            if (listem[i][0] == baslangic) {
+              konumlar.push(listem[i].slice());
+              // console.log("a" + konumlar);
+            }
+            // console.log("a" + konumlar);
+          }
+        }, 22000);*/
+        //console.log("lisyemmmm");
+        //console.log(konumlar);
+        // HEAP BİTİŞ
+        //setTimeout(function(){},20000);
+        directionsRenderer.setMap(map);
+        /*  document.getElementById("submit").addEventListener("click", () => {
+          calculateAndDisplayRoute(
+            directionsService,
+            directionsRenderer,
+            listem
+          );
+        });*/
+
+        setInterval(function () {
+          if (konumlar.length == listem.length) {
+            let s = 0;
+            for (let a = 0; a < konumlar.length; a++) {
+              if (konumlar[a] == listem[a]) {
+                s++;
+              }
+            }
+            if (s != konumlar.length) {
+              calculateAndDisplayRoute(
+                directionsService,
+                directionsRenderer,
+                listem
+              );
+            } else {
+              konumlar = listem;
+            }
+          } else {
+            calculateAndDisplayRoute(
+              directionsService,
+              directionsRenderer,
+              listem
+            );
+            konumlar = listem;
+          }
+        }, 8000);
+        /*let kargoButton = document.getElementById("kargocu");
+        kargoButton.addEventListener("click", (e) => {
+          alert(liste_sil);
+        });*/
+      }
+
+      function calculateAndDisplayRoute(
+        directionsService,
+        directionsRenderer,
+        konumlar
+      ) {
+        var list = konumlar;
+
+        var sum_kontrol = 10000;
+        let i_kontrol = 5;
+        let respon = [];
+        let respon_2 = [];
+        let toplam_sure = 0;
+        let dongu_kontrol = 0;
+        let sonlar = [];
+        var son_kontrol = 0;
+        var checkboxArray = document.getElementById("waypoints");
+        for (let i = 0; i < list.length; i++) {
+          console.log(i + " --i--");
+          dongu_kontrol++;
+          liste_sil = [];
+          let kont = 0;
+          if (sonlar.length != 0) {
+            //alert(sonlar.length);
+            for (let index = 0; index < sonlar.length; index++) {
+              // alert(baslangiclar[index] + " --" + list[i][0]);
+              if (sonlar[index] == list[i][list[i].length - 1]) {
+                kont = 1;
+              }
+            }
+          }
+          if (kont == 1) {
+            //alert("kont");
+            continue;
+          } else {
+            sonlar.push(list[i][list[i].length - 1]);
+          }
+          setTimeout(function () {
+            let waypts = [];
+            //sleep(1000);
+            for (let j = 1; j < list[i].length - 1; j++) {
+              waypts.push({
+                location: list[i][j],
+                stopover: true,
+              });
+            }
+            console.log(waypts);
+
+            directionsService
+              .route(
+                {
+                  origin: list[i][0],
+                  destination: list[i][list[i].length - 1],
+                  waypoints: waypts,
+                  optimizeWaypoints: true,
+                  travelMode: google.maps.TravelMode.DRIVING,
+                }
+                //sleep(1000)
+              )
+              .then((response) => {
+                //console.log(".then dfdsg");
+
+                // sleep(15000);
+                //sleep(1000);
+                let route = response.routes[0];
+                //console.log(reponse.route);
+                let summaryPanel = document.getElementById("directions-panel");
+                //console.log(route.legs[1].distance.text);
+                summaryPanel.innerHTML = "";
+
+                // For each route, display summary information.
+                var sum = 0;
+                //sleep(1000);
+                for (let i = 0; i < route.legs.length; i++) {
+                  let routeSegment = i + 1;
+
+                  /*console.log(
+                  route.legs[i].start_address +
+                  " -- " +
+                  route.legs[i].end_address +
+                  " --> " +
+                  route.legs[i].distance.text
+                );*/
+                  var tutucu = route.legs[i].distance.text;
+                  var bul;
+                  var abi2;
+                  bul = tutucu.indexOf(" ");
+
+                  abi2 = tutucu.slice(0, bul);
+                  abi2 = abi2.replace(",", ".");
+                  abi2 = parseFloat(abi2);
+                  sum += abi2;
+                }
+                //sleep(2200);
+                // sleep(1000);
+                if (sum < sum_kontrol) {
+                  console.log("adssaf");
+                  // al(sum);
+                  i_kontrol = i;
+                  console.log("i_kontrol: " + i_kontrol);
+                  sum_kontrol = sum;
+                  console.log("sumkontrol: " + sum_kontrol);
+                  global_res = response;
+                  directionsRenderer.setDirections(global_res);
+                  setTimeout(function () {
+                    // noktaSil(list[i_kontrol]);
+                    document.getElementById("al_rota").innerHTML =
+                      list[i_kontrol];
+                  }, 2000);
+                  liste_sil = list[i_kontrol];
+                }
+                console.log(sum);
+                toplam_sure += (i / 5) * 3000;
+                //sleep(2000);
+                // sleep(15000);
+              })
+              .catch((e) =>
+                window.alert("Directions request failed due to " + status)
+              );
+          }, (i / 10) * 3000);
+        }
+        console.log("bitti");
+
+        console.log("sumkontrol: " + sum_kontrol);
+        async function al(sum) {
+          console.log("qqqq");
+          sum_kontrol = sum;
+        }
+
+        /*function sleep(ms) {
+        return new Promise((resolve) => setTimeout(resolve, ms));
+      }*/
+
+        function sleep(milliSeconds) {
+          var startTime = new Date().getTime();
+          while (new Date().getTime() < startTime + milliSeconds);
+        }
+      }
+    </script>
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDbgGEM1EiBauwAyLcUujb6hxSIKxT21MA&callback=initMap&v=weekly"
+      async
+    >
+      // AIzaSyDbgGEM1EiBauwAyLcUujb6hxSIKxT21MA
+    </script>
+  </body>
+</html>
+
+JAVA KODLARI
+
+import static com.teamdev.jxbrowser.engine.RenderingMode.*;
+
+import com.teamdev.jxbrowser.browser.Browser;
+import com.teamdev.jxbrowser.engine.Engine;
+import com.teamdev.jxbrowser.engine.EngineOptions;
+import com.teamdev.jxbrowser.view.swing.BrowserView;
+import java.awt.BorderLayout;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+
+public class Takip {
+
+
+
+
+
+    public static void main(String[] args) {
+        EngineOptions options = EngineOptions.newBuilder(HARDWARE_ACCELERATED).licenseKey("1BNDHFSC1G0RULMEA2WZAIDA0YQQB2YWHRRHLTB8O47CSG1CKVPIAFG4DP8JP2XKJDK29K").build();
+        Engine engine = Engine.newInstance(options);
+        Browser browser = engine.newBrowser();
+
+        SwingUtilities.invokeLater(() -> {
+            BrowserView view = BrowserView.newInstance(browser);
+
+            JPanel toolBar = new JPanel();
+
+            JFrame ekran11 = new JFrame("GUI 2");
+            ekran11.add(toolBar, BorderLayout.SOUTH);
+            ekran11.add(view, BorderLayout.CENTER);
+            ekran11.setSize(800, 800);
+            ekran11.setLocation(0, 0);
+            ekran11.setVisible(true);
+
+            browser.navigation().loadUrl("C:\\Users\\burak\\Desktop\\kargoHTML\\login.html");
+        });
+        //2.guı
+        EngineOptions options2 = EngineOptions.newBuilder(HARDWARE_ACCELERATED).licenseKey("1BNDHFSC1G0RULMEA2WZAIDA0YQQB2YWHRRHLTB8O47CSG1CKVPIAFG4DP8JP2XKJDK29K").build();
+        Engine engine2 = Engine.newInstance(options2);
+        Browser browser2 = engine.newBrowser();
+
+        SwingUtilities.invokeLater(() -> {
+            BrowserView view2 = BrowserView.newInstance(browser2);
+
+            JPanel toolBar2 = new JPanel();
+
+            JFrame ekran22 = new JFrame("GUI 1");
+            ekran22.add(toolBar2, BorderLayout.SOUTH);
+            ekran22.add(view2, BorderLayout.CENTER);
+            ekran22.setSize(1200, 1000);
+            ekran22.setLocation(750, 0);
+            ekran22.setVisible(true);
+
+            browser2.navigation().loadUrl("C:\\Users\\burak\\Desktop\\kargoHTML\\mapUI.html");
+
+        });
+    }
+}
